@@ -13,6 +13,6 @@ class TodoItemCell: UITableViewCell {
     // MARK: - IB Outlets
     /**************************************************/
     
-    @IBOutlet weak var todoItemLabel: UILabel!
+    @IBOutlet weak var titleTextField: UITextField!
     
 }

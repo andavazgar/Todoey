@@ -19,23 +19,25 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="59.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Todo Item" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Drd-id-c6i">
-                        <rect key="frame" x="10" y="0.0" width="300" height="59.5"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xup-As-wtf">
+                        <rect key="frame" x="10" y="15" width="300" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="bCR-yB-Tkr"/>
+                        </constraints>
                         <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="Drd-id-c6i" secondAttribute="trailing" constant="10" id="DtM-5R-LFF"/>
-                    <constraint firstAttribute="bottom" secondItem="Drd-id-c6i" secondAttribute="bottom" id="MSd-Ib-XY7"/>
-                    <constraint firstItem="Drd-id-c6i" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="QqX-9y-vRA"/>
-                    <constraint firstItem="Drd-id-c6i" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="bIH-oN-5EO"/>
+                    <constraint firstItem="xup-As-wtf" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="Eap-H4-cBs"/>
+                    <constraint firstAttribute="trailing" secondItem="xup-As-wtf" secondAttribute="trailing" constant="10" id="Msi-E2-91p"/>
+                    <constraint firstItem="xup-As-wtf" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="eBE-ed-rca"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="todoItemLabel" destination="Drd-id-c6i" id="5jq-gH-IVd"/>
+                <outlet property="titleTextField" destination="xup-As-wtf" id="C8o-9a-1Aw"/>
             </connections>
             <point key="canvasLocation" x="34" y="62"/>
         </tableViewCell>

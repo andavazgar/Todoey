@@ -25,11 +25,14 @@
                     <navigationItem key="navigationItem" title="Todoey" id="WkE-Rn-9HA">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="hRl-r8-yoD">
                             <connections>
-                                <action selector="addItemPressed:" destination="S09-3L-uOt" id="sgo-T3-a2f"/>
+                                <action selector="addItemPressed" destination="S09-3L-uOt" id="FGm-pW-KFg"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="addItemBarButton" destination="hRl-r8-yoD" id="yHD-Y5-uww"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c6e-ex-Z2Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
