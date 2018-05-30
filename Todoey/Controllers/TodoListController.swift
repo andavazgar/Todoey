@@ -20,12 +20,11 @@ class TodoListController: UITableViewController {
     // MARK: - Variables
     /**************************************************/
     
-    private var data = [TodoItem]()
+    private var todoList = TodoList()
     private let cellID = "TodoItemCell"
     private let todoItemCellNib = UINib(nibName: "TodoItemCell", bundle: nil)
     private var isInEditMode = false
     private var indexPathBeingEdited: IndexPath?
-    private var nextBackgroundColor: CGFloat = 255
     
     
     // MARK: - Methods
@@ -36,6 +35,7 @@ class TodoListController: UITableViewController {
         
         tableView.register(todoItemCellNib, forCellReuseIdentifier: cellID)
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .black
         
         addLongPressRecognizer()
     }
@@ -67,17 +67,28 @@ class TodoListController: UITableViewController {
         indexPathBeingEdited = indexPath
     }
     
+    private func updateAppAppearance() {
+        // Sets the status bar color
+        navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.isTranslucent = false
+        
+        navigationController?.navigationBar.barTintColor = todoList.getBackgroundColor(forTodoItem: todoList.todoItems.first!)
+        navigationController?.navigationBar.tintColor = .white
+    }
+    
+    
     
     // MARK: - IB Actions
     /**************************************************/
     
     @IBAction func addItemPressed() {
-        data.append(TodoItem(title: "New Item", colorScheme: .red, colorValue: nextBackgroundColor))
-        nextBackgroundColor = (nextBackgroundColor - 30 > 0) ? nextBackgroundColor - 30 : 0
+        let nextColorValue: CGFloat = todoList.getNextColorValue()
+        todoList.todoItems.append(TodoItem(title: "New Item", colorValue: nextColorValue))
         
+        updateAppAppearance()
         tableView.reloadData()
         
-        let lastIdexPath = IndexPath(item: data.count - 1, section: 0)
+        let lastIdexPath = IndexPath(item: todoList.todoItems.count - 1, section: 0)
         enableCellEditing(forIndexPath: lastIdexPath)
         toggleEditMode()
     }
@@ -107,7 +118,7 @@ class TodoListController: UITableViewController {
         guard let indexPath = indexPathBeingEdited else { return }
         
         // Save edit
-        data[indexPath.row].title = (tableView.cellForRow(at: indexPath) as! TodoItemCell).titleTextField.text!
+        todoList.todoItems[indexPath.row].title = (tableView.cellForRow(at: indexPath) as! TodoItemCell).titleTextField.text!
         
         let lastItem = tableView.cellForRow(at: indexPath) as! TodoItemCell
         lastItem.titleTextField.isEnabled = false
@@ -121,18 +132,21 @@ class TodoListController: UITableViewController {
     /**************************************************/
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return todoList.todoItems.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! TodoItemCell
-        let todo = data[indexPath.row]
+        let todo = todoList.todoItems[indexPath.row]
         cell.titleTextField.text = todo.title
         cell.titleTextField.textColor = .white
         cell.titleTextField.isEnabled = false
         cell.titleTextField.delegate = self
-        cell.backgroundColor = todo.backgroundColor
+        
+        cell.accessoryType = todo.isChecked ? .checkmark : .none
+        cell.tintColor = .white
+        cell.backgroundColor = todoList.getBackgroundColor(forTodoItem: todo)
         
         return cell
     }
@@ -141,18 +155,19 @@ class TodoListController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        }
-        else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        todoList.todoItems[indexPath.row].isChecked = !todoList.todoItems[indexPath.row].isChecked
+        
+        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 55
     }
 }
+
+
+// MARK: - Other Delegates
+/**************************************************/
 
 extension TodoListController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
