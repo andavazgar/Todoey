@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TodoList {
+class TodoList: Codable {
     var todoItems = [TodoItem]()
     var colorScheme: ColorScheme
     var isDarkening: Bool = true

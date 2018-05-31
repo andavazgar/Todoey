@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TodoItem {
+class TodoItem: Codable {
     
     var title: String
     var isChecked: Bool = false

@@ -25,6 +25,7 @@ class TodoListController: UITableViewController {
     private let todoItemCellNib = UINib(nibName: "TodoItemCell", bundle: nil)
     private var isInEditMode = false
     private var indexPathBeingEdited: IndexPath?
+    private let itemsFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TodoItems.plist")
     
     
     // MARK: - Methods
@@ -37,7 +38,44 @@ class TodoListController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.backgroundColor = .black
         
+        // Load data if there is any
+        if let itemFilePathString = itemsFilePath?.path, FileManager.default.fileExists(atPath: itemFilePathString) {
+            loadTodoData()
+        }
+        
         addLongPressRecognizer()
+    }
+    
+    private func loadTodoData() {
+        guard let itemsFilePath = itemsFilePath else { return }
+        
+        let decoder = PropertyListDecoder()
+        
+        do {
+            let data = try Data.init(contentsOf: itemsFilePath)
+            todoList = try decoder.decode(TodoList.self, from: data)
+        }
+        catch {
+            print("Error decoding items:", error)
+        }
+        
+        updateAppAppearance()
+    }
+    
+    private func saveTodoData() {
+        guard let itemsFilePath = itemsFilePath else { return }
+        
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(todoList)
+            try data.write(to: itemsFilePath)
+        }
+        catch {
+            print("Error encoding items:", error)
+        }
+        
+        tableView.reloadData()
     }
     
     private func addLongPressRecognizer() {
@@ -50,6 +88,8 @@ class TodoListController: UITableViewController {
         if isInEditMode {
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItemPressed))
             isInEditMode = false
+            
+            saveTodoData()
         }
         else {
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleSaveItem))
@@ -157,7 +197,7 @@ class TodoListController: UITableViewController {
         
         todoList.todoItems[indexPath.row].isChecked = !todoList.todoItems[indexPath.row].isChecked
         
-        tableView.reloadData()
+        saveTodoData()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -7,7 +7,7 @@
 //
 
 
-enum ColorScheme {
+enum ColorScheme: String, Codable {
     case red
     case green
     case blue
